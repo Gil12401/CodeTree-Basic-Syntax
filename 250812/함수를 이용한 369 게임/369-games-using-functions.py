@@ -2,15 +2,13 @@ a, b = map(int, input().split())
 
 # Please write your code here.
 def is_contain_369(n):
-    ones = n % 10
-    tens = n // 10
+   while(n > 0): 
+    digit = n % 10
+    if (digit in (3,6,9)):
+        return True
+    n //= 10
 
-    cond_ones = ones in (3, 6, 9)
-    cond_tens = tens in (3, 6, 9)
-
-    return (cond_ones or cond_tens)
-
-
+    
 def count_magic_number(a, b):
     count = 0
     for i in range(a,b+1):
