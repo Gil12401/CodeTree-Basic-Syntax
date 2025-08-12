@@ -16,4 +16,4 @@ def find_LCM(n,m):
     lcm = (n * m) // find_GCD(n,m)
     print(lcm)
 
-find_LCM(12,18)
+find_LCM(n,m)
