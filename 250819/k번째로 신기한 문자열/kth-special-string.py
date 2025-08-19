@@ -4,14 +4,10 @@ str = [input() for _ in range(n)]
 
 # Please write your code here.
 def chk_start_with_T(string, pattern): 
-    if len(string) < len(pattern):
+    if(string[:len(pattern)] == pattern):
+        return True
+    else:
         return False
-
-    for i in range(len(pattern)):
-        if(string[i] != pattern[i]):
-            return False
-
-    return True
 
 def get_sorted_substr_list(str):
     sorted_substr = []
