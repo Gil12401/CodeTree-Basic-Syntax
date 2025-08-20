@@ -6,10 +6,6 @@ MAX_MINS = 60
 
 def get_mins_from_firstday(d, h, m):
     mins = (d-1)*MAX_HOURS*MAX_MINS + h*MAX_MINS + m
-    standard_mins = (11-1)*MAX_HOURS*MAX_MINS + 11*MAX_MINS + 11
-    if(mins < standard_mins):
-        return -1
-
     return mins 
 
 
@@ -18,7 +14,12 @@ mins_start = get_mins_from_firstday(11,11,11)
 mins_end = get_mins_from_firstday(a,b,c)
 mins = mins_end - mins_start
 
+if(mins < 0):
+    mins = -1
+
 print(mins)
+
+
 
 
 
