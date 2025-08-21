@@ -21,7 +21,7 @@ def get_day_of_week(mon_days,unknown_days):
     else:
         day_of_week = ["Mon", "Sun", "Sat", "Fri", "Thu", "Wed", "Tue"]
         
-    day_idx = abs((mon_days - unknown_days) % 7)
+    day_idx = abs(mon_days - unknown_days) % 7
     
     return day_of_week[day_idx]
 
@@ -29,5 +29,5 @@ def get_day_of_week(mon_days,unknown_days):
 mon_days = get_days_from_date(m1,d1)
 unknown_days = get_days_from_date(m2,d2)
 
-
+# 12 23 12 24
 print(get_day_of_week(mon_days,unknown_days))
