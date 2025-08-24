@@ -56,7 +56,8 @@ def move_x(next_dxs):
         # print("move range:(",min(cur_x, next_x),",",max(cur_x, next_x),")")
 
         for j in range(min(cur_x, next_x),max(cur_x, next_x)):
-            x_points[j] += 1
+            if 0 <= j < len(x_points):
+                x_points[j] += 1
         
         cur_x = next_x
 
