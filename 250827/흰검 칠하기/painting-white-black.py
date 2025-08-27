@@ -26,25 +26,24 @@ offset = -x_min
 x_points = [""] * (x_max - x_min + 1)
 
 # 3. 실제로 이동하면서 '지나간 구간' 카운트
-cur = 0 
-if(offset < 0):
-    cur = offset  
-    
+cur = offset
 for dx in moves:
     # (타일 위에 서 있음) = (구간의 시작점에 서 있음) 
     move_count = abs(dx)
     unit_dx = move_count // dx 
+    next_color = ""
+    if(unit_dx > 0):
+        next_color = "B"
+    else:
+        next_color = "W"
     
     # x L : x개의 칸 칠하기, (x-1)회 이동 
     for i in range(move_count):
-        if(len(x_points[cur]) == 3 or x_points[cur] == "G"):
+        x_points[cur] += next_color
+        if(x_points[cur].count("W") >= 2 and x_points[cur].count("B") >= 2 or x_points[cur] == "G"):
             x_points[cur] = "G"
-        elif(unit_dx > 0):
-            x_points[cur] += "B"
-        elif(unit_dx < 0):
-            x_points[cur] += "W"
-    
-        if (i > 0):
+            
+        if (i < move_count - 1):
             cur += unit_dx
     
            
