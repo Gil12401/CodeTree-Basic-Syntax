@@ -1,67 +1,63 @@
+MAX_K = 100000
+# [상수 설정]
+# 좌표를 배열 인덱스로 매핑하기 위한 최대 이동 한계값.
+# 좌표의 중심(시작점)을 가운데로 잡기 위해 0 ~ 2*MAX_K 범위를 사용할 것이며,
+# 시작 위치 cur = MAX_K 는 "원점(0)"에 해당한다고 보면 됨.
+
+# 변수 선언 및 입력:
 n = int(input())
-commands = [tuple(input().split()) for _ in range(n)]
-x = []
-dir = []
-for num, direction in commands:
-    x.append(int(num))
-    dir.append(direction)
+# a[i] : i번째 타일의 "마지막으로 칠해진 색"을 기록 (0=아직 안 칠함, 1=흰색(W), 2=검은색(B))
+a = [0] * (2 * MAX_K + 1)
+# cnt_b[i] : i번째 타일이 "검은색"으로 칠해진 누적 횟수
+cnt_b = [0] * (2 * MAX_K + 1)
+# cnt_w[i] : i번째 타일이 "흰색"으로 칠해진 누적 횟수
+cnt_w = [0] * (2 * MAX_K + 1)
+# 최종 집계용 변수: 흰색 개수(w), 검은색 개수(b), 회색 개수(g)
+b, w, g = 0, 0, 0
 
-# Please write your code here.
-moves = []
-for i in range(n):
-    xi, di = commands[i]
-    xi = int(xi)
-    moves.append(xi if di == "R" else -xi)
+# cur : 현재 위치의 인덱스 (원점 = MAX_K)
+cur = MAX_K
 
-# 1. 모든 이동을 따라가며 좌표 기록
-locations = [0]       
-cur = 0
-for dx in moves:
-    if(abs(dx) > 1):
-        cur += dx
-    locations.append(cur)
+# n개의 명령을 순차적으로 처리
+for _ in range(n):
+    x, c = tuple(input().split())
+    x = int(x)
 
-# 2. 좌표 범위(min, max), 전체 경로 범위 크기 구하기
-x_min, x_max = min(locations), max(locations)
-offset = -x_min
-x_points = [""] * (x_max - x_min + 1)
+    if c == 'L':
+        # [왼쪽으로 칠하기]
+        # 규칙: "x칸 칠하고 (x-1)번 이동"
+        # 아래 while은 매 반복에서 1칸을 칠한 뒤 x를 1 감소.
+        # 그 후 x가 남아있다면(=아직 더 칠해야 한다면) 왼쪽(cur-1)으로 한 칸 이동.
+        while x > 0:
+            a[cur] = 1          # 현재 칸을 흰색으로 칠했다고 '마지막 색' 기록
+            cnt_w[cur] += 1     # 현재 칸의 흰색 누적 횟수 증가
+            x -= 1              # "x칸 칠하기" 중 1칸 수행
 
-# 3. 실제로 이동하면서 '지나간 구간' 카운트
-cur = offset
-for dx in moves:
-    # (타일 위에 서 있음) = (구간의 시작점에 서 있음) 
-    move_count = abs(dx)
-    unit_dx = move_count // dx 
-    next_color = ""
-    if(unit_dx > 0):
-        next_color = "B"
+            if x:               # 아직 더 칠할 칸이 남았으면 (즉, x >= 1)
+                cur -= 1        # 왼쪽으로 1칸 이동 (총 이동은 x-1회가 됨)
     else:
-        next_color = "W"
-    
-    # x L : x개의 칸 칠하기, (x-1)회 이동 
-    for i in range(move_count):
-        x_points[cur] += next_color
-        if((x_points[cur].count("W") >= 2 and x_points[cur].count("B") >= 2) or "G" in x_points[cur]):
-            x_points[cur] = "G"
-            
-        if (i < move_count - 1):
-            cur += unit_dx
-    
-           
-# W, B, G 순으로 갯수 출력 
-w_count, b_count, g_count = 0, 0, 0
-for color in x_points:
-    last_color = ""
-    if(len(color) > 0):
-        last_color = color[-1]  
+        # [오른쪽으로 칠하기]
+        # 동일한 규칙: "x칸 칠하고 (x-1)번 이동"
+        while x > 0:
+            a[cur] = 2          # 현재 칸을 검은색으로 칠했다고 '마지막 색' 기록
+            cnt_b[cur] += 1     # 현재 칸의 검은색 누적 횟수 증가
+            x -= 1              # "x칸 칠하기" 중 1칸 수행
 
-    if(last_color == "W"):
-        w_count += 1
-    elif(last_color == "B"):
-        b_count += 1
-    elif(last_color == "G"):
-        g_count += 1
- 
-# print(tiles_color)
-# print(x_points)
-print(w_count,b_count,g_count,end=" ")
+            if x:               # 아직 더 칠할 칸이 남았으면
+                cur += 1        # 오른쪽으로 1칸 이동 (총 이동은 x-1회)
+
+# 모든 칠하기가 끝난 뒤, 전체 보드를 스캔하며 최종 색을 결정
+for i in range(2 * MAX_K + 1):
+    # [회색(Gray) 판정]
+    # 조건: 같은 칸에 흰색이 2회 이상, 검은색이 2회 이상 칠해졌다면 회색
+    if cnt_b[i] >= 2 and cnt_w[i] >= 2: 
+        g += 1
+    # 위 조건이 아니라면, "마지막으로 칠해진 색"이 그 칸의 최종 색
+    elif a[i] == 1:             # 마지막 색이 흰색
+        w += 1
+    elif a[i] == 2:             # 마지막 색이 검은색
+        b += 1
+    # a[i] == 0 이면 (한 번도 칠하지 않은 칸) 어느 색에도 카운트되지 않음
+
+# 정답을 출력합니다.
+print(w, b, g)
