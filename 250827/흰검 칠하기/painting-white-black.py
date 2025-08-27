@@ -17,7 +17,8 @@ for i in range(n):
 locations = [0]       
 cur = 0
 for dx in moves:
-    cur += dx
+    if(abs(dx) > 1):
+        cur += dx
     locations.append(cur)
 
 # 2. 좌표 범위(min, max), 전체 경로 범위 크기 구하기
@@ -40,7 +41,7 @@ for dx in moves:
     # x L : x개의 칸 칠하기, (x-1)회 이동 
     for i in range(move_count):
         x_points[cur] += next_color
-        if(x_points[cur].count("W") >= 2 and x_points[cur].count("B") >= 2 or x_points[cur] == "G"):
+        if((x_points[cur].count("W") >= 2 and x_points[cur].count("B") >= 2) or "G" in x_points[cur]):
             x_points[cur] = "G"
             
         if (i < move_count - 1):
