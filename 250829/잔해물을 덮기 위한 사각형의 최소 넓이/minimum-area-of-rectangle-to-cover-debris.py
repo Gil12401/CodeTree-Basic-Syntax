@@ -14,25 +14,28 @@ for i in range(2):
         for col in range(xa, xb):
             grid[row][col] += 1
 
-# A의 경계(오프셋 적용 후)
+# A 범위(오프셋 적용)
 Ax1, Ax2 = sorted((x1[0] + offset, x2[0] + offset))
 Ay1, Ay2 = sorted((y1[0] + offset, y2[0] + offset))
 
-width_max = 0
-height = Ay2 - Ay1
-for row in range(Ay1, Ay2):
-    width_count = 0 
-    for col in range(Ax1, Ax2):
-        if(grid[row][col] == 1):
-            width_count += 1
-        else:
-            width_count = 0 
+# A-only(값==1) 셀들의 최소/최대 행·열 찾기
+found = False
+min_row, max_row = 10**9, -1
+min_col, max_col = 10**9, -1
 
-        if all(x == 2 for x in grid[row]):
-            height -= 1
-    
-    width_max = max(width_max,width_count)
+for r in range(Ay1, Ay2):
+    for c in range(Ax1, Ax2):
+        if grid[r][c] == 1:       # A만 칠해진 칸
+            found = True
+            if r < min_row: min_row = r
+            if r > max_row: max_row = r
+            if c < min_col: min_col = c
+            if c > max_col: max_col = c
 
-
-area = width_max * height
-print(area)
+if not found:
+    print(0)                      # A가 B에 완전히 덮였으면 0
+else:
+    # 최소 덮개 직사각형(격자 기준): +1 중요 (half-open로 채웠기 때문)
+    width  = max_col - min_col + 1
+    height = max_row - min_row + 1
+    print(width * height)
