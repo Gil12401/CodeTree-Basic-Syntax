@@ -10,5 +10,5 @@ for i in range(n):
         max_count = max(max_count, count)
         count = 0
     count += 1
-    
+
 print(max_count)
