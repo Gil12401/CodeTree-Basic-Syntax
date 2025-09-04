@@ -54,7 +54,7 @@ padded_a, padded_b = pad_to_same_length(a,b)
 # print(padded_a)
 # print(padded_b)
 
-time = 0
+time = -1
 for t in range(len(padded_a)):
     if (t > 0 and padded_a[t] == padded_b[t]):
         time = t
