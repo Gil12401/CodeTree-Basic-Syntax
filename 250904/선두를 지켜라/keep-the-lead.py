@@ -33,29 +33,25 @@ def get_list_after_movement(list, length, v, t):
 a = get_list_after_movement(a, n, v, t)
 b = get_list_after_movement(b, m, v2, t2)
 
-first_per_time = ['E'] 
-
-for i in range(1,len(a)):
+# A와 B 중 더 앞서 있는 경우를 확인합니다.
+# A가 리더면 1, B가 리더면 2로 관리합니다.
+leader, ans = 0, 0
+for i in range(1, len(a)):
     if a[i] > b[i]:
-        first_per_time.append('A')
+        # 기존 리더가 B였다면
+        # 답을 갱신합니다.
+        if leader == 2:
+            ans += 1
+
+        # 리더를 A로 변경합니다.
+        leader = 1
     elif a[i] < b[i]:
-        first_per_time.append('B')
-    else:
-        prev_1st = first_per_time[-1]
-        first_per_time.append(prev_1st)
+        # 기존 리더가 A였다면
+        # 답을 갱신합니다.
+        if leader == 1:
+            ans += 1
 
-# 1. 'E' 제거
-first_per_time = [x for x in first_per_time if x != 'E']
-
-# ['B', 'B', 'B', 'B', 'A', 'A', 'B', 'B', 'B', 'B', 'B', 'B', 'B', 'B']
-# 2. 연속 중복 제거
-compressed = [first_per_time[0]]  # 첫 원소는 무조건 넣음
-for x in first_per_time[1:]:
-    if x != compressed[-1]:
-        compressed.append(x)
-
-# print(a)
-# print(b)
-# print(first_per_time)
-# print(compressed)
-print(len(compressed)-1)
+        # 리더를 B로 변경합니다.
+        leader = 2
+        
+print(ans)
